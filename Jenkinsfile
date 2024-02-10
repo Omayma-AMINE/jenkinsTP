@@ -36,7 +36,7 @@ pipeline{
         }
         stage('Deploy image'){
             steps{
-                bat "docker run -d -p 8095:80 $registry:$BUILD_NUMBER"
+                bat "docker run -d -p 8096:80 $registry:$BUILD_NUMBER"
             }
         }
     }
