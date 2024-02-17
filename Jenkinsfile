@@ -36,7 +36,16 @@ pipeline{
         }
         stage('Deploy image'){
             steps{
-                bat "docker run -d -p 8096:80 $registry:$BUILD_NUMBER"
+                bat '''
+                docker ps -q --filter "publish=8088/tcp" | findstr "." >nul
+                if errorlevel 1 (
+                    docker run -d -p 8088:80 --name apptestjob4 $registry:$BUILD_NUMBER
+                ) else (
+                    docker stop apptestjob4
+                    docker rm apptestjob4
+                    docker run -d -p 8088:80 --name apptestjob4 $registry:$BUILD_NUMBER
+                )
+                '''
             }
         }
     }
